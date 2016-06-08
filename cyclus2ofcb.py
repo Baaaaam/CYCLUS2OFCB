@@ -279,31 +279,8 @@ def read_storage(hd, info):
   FCO_storage_pu_position = ['GD', 'GI', 'GN', 'GS', 'GX']
   r_sheet_storage = 'sheet4.xml'
 
-  if len(hd) == 2 : # read PU and MA storage content
-    st_inv = [ [], [] ]
-    st_pu_inv = [ [], [] ,[], [], []]
-    st_name = info.split(',')
-    # read Cooling information
-    for name in st_name:
-      cmd = "cyan -db cyclus.sqlite inv "
-      for i in range(2):
-        st_inv[i] += cyan(cmd + "-nucs=" + nucs_name[i] +" " + name)
-    for i in range(2):
-      st_inv[i] = translate_info(st_inv[i], 2,timestep)
-      st_inv_yearly = month2year(st_inv[i], 0, 0)/1000
-      push_in_fco_excel(st_inv_yearly, r_sheet_storage, FCO_PUMA_storage_position[i], 6)
-
-    for name in st_name:
-      cmd = "cyan -db cyclus.sqlite inv "
-      for i in range(5):
-        st_pu_inv[i] += cyan(cmd + "-nucs=" + nucs_Pu_list[i] +" " + name)
-    for i in range(5):
-      st_pu_inv[i] = translate_info(st_pu_inv[i], 2,timestep)
-      st_inv_yearly = month2year(st_pu_inv[i], 0, 0)/1000
-      push_in_fco_excel(st_inv_yearly, r_sheet_storage, FCO_storage_pu_position[i], 6)
-  else : # read RU/DU content
-    st_id = hd.split('_')[1]
-    if st_id == "DU":
+  for st_id in hd.split(','):
+    if st_id == "U":
       FCO_DU_storage_position = 'FX'
       st_name = info.split(',')
       st_inv = []
@@ -313,16 +290,6 @@ def read_storage(hd, info):
       st_inv = translate_info(st_inv, 2,timestep)
       st_inv_yearly = month2year(st_inv, 0, 0)/1000
       push_in_fco_excel(st_inv_yearly, r_sheet_storage, FCO_DU_storage_position, 6)
-    elif st_id == "RU":
-      FCO_RU_storage_position = 'FS'
-      st_name = info.split(',')
-      st_inv = []
-      for name in st_name:
-        cmd = "cyan -db cyclus.sqlite inv "
-        st_inv += cyan(cmd + "-nucs=" + nucs_U + " " + name)
-      st_inv = translate_info(st_inv, 2,timestep)
-      st_inv_yearly = month2year(st_inv, 0, 0)/1000
-      push_in_fco_excel(st_inv_yearly, r_sheet_storage, FCO_RU_storage_position, 6)
     elif st_id == "MA":
       FCO_RU_storage_position = 'FN'
       st_name = info.split(',')
@@ -343,6 +310,15 @@ def read_storage(hd, info):
       st_inv = translate_info(st_inv, 2,timestep)
       st_inv_yearly = month2year(st_inv, 0, 0)/1000
       push_in_fco_excel(st_inv_yearly, r_sheet_storage, FCO_RU_storage_position, 6)
+    else :
+      st_name = info.split(',')
+       st_inv = []
+       for name in st_name:
+         cmd = "cyan -db cyclus.sqlite inv "
+         st_inv += cyan(cmd + "-nucs=" + nucs_Pu + " " + name)
+       st_inv = translate_info(st_inv, 2,timestep)
+       st_inv_yearly = month2year(st_inv, 0, 0)/1000
+       push_in_fco_excel(st_inv_yearly, r_sheet_storage, FCO_RU_storage_position, 6)
 
 
 
