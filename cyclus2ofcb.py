@@ -29,29 +29,6 @@ nucs_MA = nucs_Am + "," + nucs_Cm + "," + nucs_Np
 
 
 
-def push_in_fco_excel(matrix, sheet, column, start_row):
-  for i in range (len(matrix)):
-    cmd = "sed 's/\(r=\""+column + str(start_row+i)
-    cmd += "\" .......<v>\)[^<]*/\\1"
-    cmd += str(matrix[i]) + "/' _tmp/xl/worksheets/" + sheet + " > _tmp/xl/worksheets/sheet_tmp.xml"
-    os.system(cmd)
-    os.system("mv _tmp/xl/worksheets/sheet_tmp.xml _tmp/xl/worksheets/" + sheet)
-
-
-
-def open_xslm(filename):
-  cmd = 'unzip '+ filename + ' -d _tmp/'
-  output = subprocess.check_output(cmd.split())
-
-
-
-def save_xslm(filename):
-  cmd = 'cd _tmp; zip -r ../'+ filename + ' *'
-  os.system(cmd + ' >/dev/null')
-  cmd ='rm -rf _tmp'
-  os.system(cmd)
-
-
 
 def read_input(input):
   f = open(input, 'r')
